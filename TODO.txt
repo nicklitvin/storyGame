@@ -1,0 +1,52 @@
+FOR LATER
+preload everything, loading screen
+caching mp3 files
+add about page
+localStorage: store scene, events
+class diagram to easily rearrange scenes, LinkedList-like
+easter egg for changing localstorage
+
+STRUCTURE
+
+class Game (scene=1,):
+    this.scene = Storage(scene)
+    this.pause 
+    this.events = {
+        Discord:
+        MainEntrance:
+    }
+
+    run:
+        nextScene = this.scene.run()
+        this.scene = nextScene
+
+class Storage{
+    scenes = {
+        1: {
+            audio
+            objects
+            order
+            Scene(audio,objects,order)
+        }
+    }
+}
+
+class Scene{
+    this.audio
+    this.objects
+    
+    run:
+}
+
+class Object {
+    isMouseOver
+}
+
+class Mouse{
+
+}
+
+
+
+
+
