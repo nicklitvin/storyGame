@@ -1,3 +1,8 @@
+TODO
+create storage for quick load through game
+clicking on interactables
+audio playing
+
 FOR LATER
 preload everything, loading screen
 caching mp3 files
@@ -6,9 +11,7 @@ localStorage: store scene, events
 class diagram to easily rearrange scenes, LinkedList-like
 easter egg for changing localstorage
 
-STRUCTURE
-
-class Game (scene=1,):
+class Game (scene=1):
     this.scene = Storage(scene)
     this.pause 
     this.events = {
@@ -31,22 +34,7 @@ class Storage{
     }
 }
 
-class Scene{
-    this.audio
-    this.objects
-    
-    run:
-}
-
-class Object {
-    isMouseOver
-}
-
-class Mouse{
-
-}
-
-
+Scene.order = [Audio|Interaction]
 
 
 

@@ -6,9 +6,14 @@ function createGame(){
 }
 
 class Game{
-    constructor(){}
+    constructor(startScene=null){
+        this.currentScene = startScene
+    }
 
     run(){
-        console.log("starting")
+        while(true){
+            nextScene = this.currentScene.run()
+            this.currentScene = nextScene
+        }
     }
 }
