@@ -1,19 +1,17 @@
-let game
+import { storage } from "./modules/storage.js"
+import { strict as assert } from "assert"
 
-function createGame(){
-    game = new Game()
-    game.run()
-}
-
-class Game{
-    constructor(startScene=null){
-        this.currentScene = startScene
+export default class Game{
+    constructor(){
+        this.currentScene = storage.defaultScene
     }
 
-    run(){
-        while(true){
-            nextScene = this.currentScene.run()
-            this.currentScene = nextScene
-        }
+    async run(){
+        var nextScene = await this.currentScene.run()
+        assert(nextScene == storage.defaultScene.nextScene)
+        // while(true){
+        //     nextScene = this.currentScene.run()
+        //     this.currentScene = nextScene
+        // }
     }
 }

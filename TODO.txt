@@ -1,5 +1,4 @@
 TODO
-create storage for quick load through game
 clicking on interactables
 audio playing
 
