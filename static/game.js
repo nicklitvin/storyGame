@@ -1,5 +1,4 @@
 import { storage } from "./modules/storage.js"
-import { strict as assert } from "assert"
 
 export default class Game{
     constructor(){
@@ -8,7 +7,7 @@ export default class Game{
 
     async run(){
         var nextScene = await this.currentScene.run()
-        assert(nextScene == storage.defaultScene.nextScene)
+        this.currentScene = nextScene
         // while(true){
         //     nextScene = this.currentScene.run()
         //     this.currentScene = nextScene

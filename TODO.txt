@@ -1,5 +1,7 @@
 TODO
-clicking on interactables
+create clicking during scene
+Scenes affecting future scenes/game
+pausing
 audio playing
 
 FOR LATER
@@ -10,30 +12,12 @@ localStorage: store scene, events
 class diagram to easily rearrange scenes, LinkedList-like
 easter egg for changing localstorage
 
-class Game (scene=1):
-    this.scene = Storage(scene)
-    this.pause 
-    this.events = {
-        Discord:
-        MainEntrance:
-    }
+GAME TESTS
+    Keep mouse within moving circle
+        boundary jerks with audio
+        mouse not on page focus = cheating
 
-    run:
-        nextScene = this.scene.run()
-        this.scene = nextScene
 
-class Storage{
-    scenes = {
-        1: {
-            audio
-            objects
-            order
-            Scene(audio,objects,order)
-        }
-    }
-}
-
-Scene.order = [Audio|Interaction]
 
 
 

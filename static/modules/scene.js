@@ -5,10 +5,10 @@ export default class Scene {
     }
 
     async run(){
-        console.log(this.order)
         for(let frame of this.order){
             await frame.play()
         } 
+        // console.log("returning ", this.nextScene)
         return this.nextScene
     }
 }
