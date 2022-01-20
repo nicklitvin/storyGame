@@ -5,7 +5,7 @@ export default class Interaction{
         this.isOver = isOver
     }
 
-    async play(){
+    async playAndClickAll(){
         for(let i of this.interactables){
             await i.clickedOn()
         }
@@ -14,5 +14,22 @@ export default class Interaction{
         return new Promise( (res)=>{
             setTimeout(res,time)
         })
-    }   
+    }
+
+    async play(){
+        var time = this.duration
+        return new Promise( (res)=>{
+            setTimeout(res,time)
+        })
+    }
+
+    async processMouseChange(mouse){
+        var clickedOn = 0
+        for(let i of this.interactables){
+            if(await i.isClickedOn(mouse)){
+                clickedOn += 1
+            }
+        }
+        return clickedOn
+    }
 }

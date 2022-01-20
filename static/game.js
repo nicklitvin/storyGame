@@ -1,8 +1,10 @@
+import Mouse from "./modules/mouse.js"
 import { storage } from "./modules/storage.js"
 
 export default class Game{
-    constructor(){
-        this.currentScene = storage.defaultScene
+    constructor(scene=storage.default){
+        this.currentScene = scene
+        this.mouse = new Mouse()
     }
 
     async run(){
@@ -12,5 +14,24 @@ export default class Game{
         //     nextScene = this.currentScene.run()
         //     this.currentScene = nextScene
         // }
+    }
+
+    async testRun(){
+        var nextScene = await this.currentScene.testRun()
+        this.currentScene = nextScene
+    }
+
+    testRunWithoutWaiting(){
+        this.currentScene.run()
+    }
+
+    async processMouseChange(){
+        try{
+            const clickedOn = await this.currentScene.currentFrame.processMouseChange(this.mouse)
+            return clickedOn
+        }
+        catch{
+            throw Error("Process Mouse Change Error")
+        }
     }
 }

@@ -1,10 +1,11 @@
 TODO
-create clicking during scene
+test transition to other scenes
 Scenes affecting future scenes/game
 pausing
 audio playing
 
 FOR LATER
+dont keep track of mouse when not necessary during scene
 preload everything, loading screen
 caching mp3 files
 add about page
