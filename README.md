@@ -1,6 +1,6 @@
-### Description
+## Description
 
-Platform for a story-driven single-player game 
+Platform for a story-driven single-player game
 
 Current State: Early Development
 

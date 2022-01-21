@@ -9,16 +9,12 @@ export default class Game{
 
     async run(){
         var nextScene = await this.currentScene.run()
-        this.currentScene = nextScene
-        // while(true){
-        //     nextScene = this.currentScene.run()
-        //     this.currentScene = nextScene
-        // }
+        this.currentScene = storage[nextScene]
     }
 
-    async testRun(){
-        var nextScene = await this.currentScene.testRun()
-        this.currentScene = nextScene
+    async testRunClickAll(){
+        var nextScene = await this.currentScene.testRunClickAll()
+        this.currentScene = storage[nextScene]
     }
 
     testRunWithoutWaiting(){
@@ -31,7 +27,7 @@ export default class Game{
             return clickedOn
         }
         catch{
-            throw Error("Process Mouse Change Error")
+            return 0
         }
     }
 }

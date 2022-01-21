@@ -15,7 +15,7 @@ const testSceneData = {
                 ],1),
             new Audio("TEST DEFAULT 4/4")
         ],
-        nextScene: "scene2"
+        nextScene: "nextDefaultScene"
     },
     testClick: {
         order: [
@@ -27,6 +27,26 @@ const testSceneData = {
             new Audio("TEST CLICK 2/2")
         ],
         nextScene: "test2"
+    },
+    testTransition:{
+        order: [
+            new Interaction(
+                [
+                    new Interactable(new Audio("ERROR: SHOULDN'T BE CLICKED"), new Location(4,4),2),
+                ],1),
+            new Audio("TEST TRANSITION 1/3")
+        ],
+        nextScene: "testTransition1"
+    },
+    testTransition1: {
+        order: [
+            new Audio("TEST TRANSITION 2/3"),
+            new Interaction(
+                [
+                    new Interactable(new Audio("TEST TRANSITION 3/3"), new Location(4,4),2),
+                ],1)
+        ],
+        nextScene: "nextDefaultScene"
     }
 }
 
@@ -42,5 +62,9 @@ const sceneData = {
 export const storage = {
     testDefaultScene: new Scene(testSceneData.testDefault),
     testClick: new Scene(testSceneData.testClick),
-    default: new Scene(sceneData.default)
+    testTransition: new Scene(testSceneData.testTransition),
+    testTransition1: new Scene(testSceneData.testTransition1),
+
+    default: new Scene(sceneData.default),
+    nextDefaultScene: "nextDefaultScene"
 }

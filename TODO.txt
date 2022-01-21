@@ -1,5 +1,4 @@
 TODO
-test transition to other scenes
 Scenes affecting future scenes/game
 pausing
 audio playing

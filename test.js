@@ -23,10 +23,10 @@ class TestGame{
         assert(click2 == false, "should not be clicked")
     }
 
-    async testGame(){
+    async testGameSceneReturn(){
         const myGame = new Game(storage.testDefaultScene)
-        await myGame.testRun()
-        assert(myGame.currentScene == storage.testDefaultScene.nextScene, "next Scene Error")
+        await myGame.testRunClickAll()
+        assert(myGame.currentScene == storage.nextDefaultScene, "next Scene Error")
     }
 
     async testInteractableClick(){
@@ -36,7 +36,27 @@ class TestGame{
         const clicked = await myGame.processMouseChange()
         assert(clicked == 1, "clicked Error")
         
-        // give time for audio to finish playing
+        return new Promise( (res)=>{
+            setTimeout(res,500)
+        })
+    }
+
+    async testSceneAndFrameTransition(){
+        const myGame = new Game(storage.testTransition)
+        myGame.mouse = new Mouse(new Location(4,4.2))
+        await myGame.run()
+
+        myGame.testRunWithoutWaiting()
+        const beforeClick = await myGame.processMouseChange()
+        assert(beforeClick == 0, "dont process click during audio")
+        assert(myGame.currentScene.currentFrame == storage.testTransition1.currentFrame, "should be audio")
+        await new Promise( (res)=>setTimeout(res,350))
+
+        assert(myGame.currentScene.currentFrame == storage.testTransition1.currentFrame, "should be interact")
+        const afterClick = await myGame.processMouseChange()
+        assert(afterClick == 1, "click not registering")
+
+
         return new Promise( (res)=>{
             setTimeout(res,500)
         })
@@ -44,7 +64,12 @@ class TestGame{
 
     async runTests(){
         for(var test of 
-            [this.testClick,this.testGame, this.testInteractableClick])
+            [   
+                this.testClick,
+                this.testGameSceneReturn,
+                this.testInteractableClick,
+                this.testSceneAndFrameTransition
+            ])
         {
             console.log(this.split)
             await test()

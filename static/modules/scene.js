@@ -14,7 +14,7 @@ export default class Scene {
         return this.nextScene
     }
 
-    async testRun(){
+    async testRunClickAll(){
         for(let frame of this.order){
             this.currentFrame = frame
             try{await frame.playAndClickAll()}
