@@ -30,4 +30,8 @@ export default class Game{
             return 0
         }
     }
+
+    moveMouse(x,y){
+        this.mouse.move(x,y)
+    }
 }

@@ -1,5 +1,5 @@
 TODO
-Scenes affecting future scenes/game
+Make events belong to Game object
 pausing
 audio playing
 
@@ -17,7 +17,12 @@ GAME TESTS
         boundary jerks with audio
         mouse not on page focus = cheating
 
+GAME
+pass events to scenes
 
+SCENE
+need to know events to play correct audio
+need to know events to change events
 
 
 

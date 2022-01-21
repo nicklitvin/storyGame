@@ -4,7 +4,7 @@ import Audio from "./static/modules/audio.js"
 import Location from "./static/modules/location.js"
 import { strict as assert } from "assert"
 import Game from "./static/game.js"
-import { storage } from "./static/modules/storage.js"
+import { storage, events } from "./static/modules/storage.js"
 
 class TestGame{
     constructor(){
@@ -62,13 +62,45 @@ class TestGame{
         })
     }
 
+    async testMouseMove(){
+        const myGame = new Game(storage.testClick)
+        myGame.mouse = new Mouse(new Location(0,0))
+        myGame.testRunWithoutWaiting()
+        
+        const beforeMove = await myGame.processMouseChange()
+        assert(beforeMove == 0, "should miss target")
+        
+        myGame.moveMouse(4,4.1)
+        const afterMove = await myGame.processMouseChange()
+        assert(afterMove == 1, "should hit target")
+        
+        return new Promise( (res)=>{
+            setTimeout(res,250)
+        })
+    }
+
+    async testEventChange(){
+        const myGame = new Game(storage.testEventChange)
+        await myGame.testRunClickAll()
+        assert(events.testEvent == 1, "event should change")
+        assert(myGame.currentScene === storage.testEventChange1)
+
+        events.testEvent = 0
+        const myGame1 = new Game(storage.testEventChangeExtra)
+        await myGame1.run()
+        assert(events.testEvent == 0, "event shouldnt change")
+        assert(myGame1.currentScene === storage.testEventChange2)
+    }
+
     async runTests(){
         for(var test of 
             [   
                 this.testClick,
                 this.testGameSceneReturn,
                 this.testInteractableClick,
-                this.testSceneAndFrameTransition
+                this.testSceneAndFrameTransition,
+                this.testMouseMove,
+                this.testEventChange
             ])
         {
             console.log(this.split)

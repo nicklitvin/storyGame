@@ -1,11 +1,18 @@
 export default class Interactable{
-    constructor(audio,location=null,radius=1){
+    constructor(audio,location=null,radius=1,events=null,affectedEvent=null,requiredEvent=null){
         this.audio = audio
         this.location = location
         this.radius = radius
+        this.events = events
+        this.affectedEvent = affectedEvent
+        this.requiredEvent = requiredEvent
     }
 
     async clickedOn(){
+        try{
+            this.events[this.affectedEvent] = 1
+        }
+        catch{}
         await this.audio.play()
     }
 

@@ -3,6 +3,11 @@ import Scene from "./scene.js"
 import Interactable from "./interactable.js"
 import Interaction from "./interaction.js"
 import Location from "./location.js"
+import SceneDeterminant from "./sceneDeterminant.js"
+
+export const events = {
+    testEvent: 0
+}
 
 const testSceneData = {
     testDefault: {
@@ -47,6 +52,36 @@ const testSceneData = {
                 ],1)
         ],
         nextScene: "nextDefaultScene"
+    },
+    testEventChange: {
+        order: [
+            new Interaction(
+                [new Interactable(new Audio("TEST EVENT 1/1"), new Location(0,0),2,events,"testEvent")]
+                ,1
+            )
+        ],
+        nextScene: new SceneDeterminant(events,"testEvent",["testEventChange2","testEventChange1"]) 
+    },
+    testEventChangeExtra: {
+        order: [
+            new Interaction(
+                [new Interactable(new Audio("ERROR"), new Location(0,0),2,events,"testEvent")]
+                ,1
+            )
+        ],
+        nextScene: new SceneDeterminant(events,"testEvent",["testEventChange2","testEventChange1"]) 
+    },
+    testEventChange1: {
+        order: [
+            new Audio("ERROR")
+        ],
+        nextScene: "nextDefaultScene"
+    },
+    testEventChange2: {
+        order: [
+            new Audio("ERROR")
+        ],
+        nextScene: "nextDefaultScene"
     }
 }
 
@@ -64,7 +99,12 @@ export const storage = {
     testClick: new Scene(testSceneData.testClick),
     testTransition: new Scene(testSceneData.testTransition),
     testTransition1: new Scene(testSceneData.testTransition1),
+    testEventChange: new Scene(testSceneData.testEventChange),
+    testEventChangeExtra: new Scene(testSceneData.testEventChangeExtra),
+    testEventChange1: new Scene(testSceneData.testEventChange1),
+    testEventChange2: new Scene(testSceneData.testEventChange2),
 
     default: new Scene(sceneData.default),
     nextDefaultScene: "nextDefaultScene"
 }
+

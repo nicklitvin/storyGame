@@ -5,13 +5,22 @@ export default class Scene {
         this.currentFrame = null
     }
 
+    updateNextScene(){
+        try{
+            return this.nextScene.decide()
+        }
+        catch{
+            return this.nextScene
+        }  
+    }
+
     async run(){
         for(let frame of this.order){
             this.currentFrame = frame
             await frame.play()
         } 
-        // console.log("returning ", this.nextScene)
-        return this.nextScene
+            
+        return this.updateNextScene()
     }
 
     async testRunClickAll(){
@@ -20,9 +29,6 @@ export default class Scene {
             try{await frame.playAndClickAll()}
             catch{await frame.play()}
         } 
-        // console.log("returning ", this.nextScene)
-        return this.nextScene
+        return this.updateNextScene()
     }
-
-
 }
