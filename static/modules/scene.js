@@ -14,10 +14,10 @@ export default class Scene {
         }  
     }
 
-    async run(){
+    async run(mouse=null){
         for(let frame of this.order){
             this.currentFrame = frame
-            await frame.play()
+            await frame.play(mouse)
         } 
             
         return this.updateNextScene()

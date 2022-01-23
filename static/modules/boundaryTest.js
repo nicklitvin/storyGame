@@ -6,12 +6,14 @@ export class KeyPoint{
 }
 
 export class BoundaryTest{
-    constructor(location=null,keyPoints=null,radius=null,mouse=null){
+    constructor(location=null,keyPoints=null,radius=null,mouse=null,events=null,affectedEvent=null){
         this.location = location
         this.keyPoints = keyPoints
         this.radius = radius
         this.refreshRate = 100
         this.mouse = mouse
+        this.events = events
+        this.affectedEvent = affectedEvent
     }
 
     async runUntilFail(){
@@ -21,6 +23,14 @@ export class BoundaryTest{
             }
         }
         return this.isMouseWithinBoundary()
+    }
+
+    async play(mouse){
+        this.mouse = mouse
+        const result = await this.runUntilFail()
+        if(result){
+            this.events[this.affectedEvent] = 1
+        }
     }
 
     async moveBoundary(keyPoint){
@@ -57,8 +67,8 @@ export class BoundaryTest{
     }
 
     isMouseWithinBoundary(){
-        this.distance = ((this.location.x-this.mouse.location.x)**2 +
+        const distance = ((this.location.x-this.mouse.location.x)**2 +
             (this.location.y-this.mouse.location.y)**2)**0.5
-        return this.distance <= this.radius 
+        return distance <= this.radius 
     }
 }

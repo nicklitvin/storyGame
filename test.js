@@ -120,6 +120,14 @@ class TestGame{
         console.log("TESTING BOUNDARY2 1/1")
     }
 
+    async testBoundaryInGame(){
+        const myGame = new Game(storage.testBoundary)
+        myGame.mouse = new Mouse(new Location(0.5,0.5))
+
+        await myGame.run()
+        assert(events.testBoundary == 1, "mouse should be always within boundary")
+    }
+
     async runTests(){
         for(var test of 
             [   
@@ -131,6 +139,7 @@ class TestGame{
                 this.testEventChange,
                 this.testMovingBoundary,
                 this.testMovingBoundary1,
+                this.testBoundaryInGame
             ])
         {
             console.log(this.split)

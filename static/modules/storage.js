@@ -4,9 +4,11 @@ import Interactable from "./interactable.js"
 import Interaction from "./interaction.js"
 import Location from "./location.js"
 import SceneDeterminant from "./sceneDeterminant.js"
+import { KeyPoint, BoundaryTest } from "./boundaryTest.js"
 
 export const events = {
-    testEvent: 0
+    testEvent: 0,
+    testBoundary: 0
 }
 
 const testSceneData = {
@@ -82,6 +84,24 @@ const testSceneData = {
             new Audio("ERROR")
         ],
         nextScene: "nextDefaultScene"
+    },
+    testBoundary: {
+        order: [
+            new Audio("TEST BOUNDARY INGAME 1/2"),
+            new BoundaryTest(
+                new Location(1,1),
+                [
+                    new KeyPoint(new Location(1.1,1.1),0.2),
+                    new KeyPoint(new Location(0.1,0.1),0.2),
+                ],
+                1,
+                null,
+                events,
+                "testBoundary"
+            ),
+            new Audio("TEST BOUNDARY INGAME 2/2"),
+        ],
+        nextScene: "nextDefaultScene"
     }
 }
 
@@ -103,6 +123,7 @@ export const storage = {
     testEventChangeExtra: new Scene(testSceneData.testEventChangeExtra),
     testEventChange1: new Scene(testSceneData.testEventChange1),
     testEventChange2: new Scene(testSceneData.testEventChange2),
+    testBoundary: new Scene(testSceneData.testBoundary),
 
     default: new Scene(sceneData.default),
     nextDefaultScene: "nextDefaultScene"

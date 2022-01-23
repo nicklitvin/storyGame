@@ -1,10 +1,10 @@
 TODO
-add testBoundary to storage
 audio playing
 pausing
-Make events belong to Game object
 
 FOR LATER
+Make Interactable a base class with other specific children classes
+Make events belong to Game object
 create txt file that takes user input and creates scenes
 dont keep track of mouse when not necessary during scene
 preload everything, loading screen
@@ -14,52 +14,7 @@ localStorage: store scene, events
 class diagram to easily rearrange scenes, LinkedList-like
 easter egg for changing localstorage
 should pause restart audio? probably not
+if mouse not on page focus during testBoundary => cheating => fail
 
-GAME TESTS
-    Keep mouse within moving circle
-        boundary jerks with audio
-        mouse not on page focus = cheating
-
-
-boundaryTest
-    location
-    radius
-    keyPoints = [ (location,time), ...]
-    refresh rate = 100
-    mouse
-
-    run()
-        for a in keypoints:
-            if(!moveBoundary(a)){
-                return fail
-            }
-
-        return isMouseWithinBoundary
-
-    moveBoundary():
-        startTime = X in ms
-        endTime = time*1000 in ms
-
-        trajectory = newLocation - this.location / endTime - StartTime
-        
-        lastTime = X in ms
-
-        ID = setInterval(
-            currentTime = data.now
-
-            this.location += trajectory * currentTime - lastTime
-
-            if !isMouseWithinBoundary:
-                return false
-
-            if currentTime >= endTime:
-                ClearInterval(ID)
-                return isMouseWithinBoundary()
-
-            ,ms/refreshRate)
-
-    isMouseWithinBoundary():
-        this.distance = location.x - mouse.location.x)**2 + ()**2
-        return distance <= radius
 
 

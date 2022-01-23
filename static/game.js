@@ -8,7 +8,7 @@ export default class Game{
     }
 
     async run(){
-        var nextScene = await this.currentScene.run()
+        var nextScene = await this.currentScene.run(this.mouse)
         this.currentScene = storage[nextScene]
     }
 
