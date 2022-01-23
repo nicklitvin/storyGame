@@ -102,6 +102,12 @@ const testSceneData = {
             new Audio("TEST BOUNDARY INGAME 2/2"),
         ],
         nextScene: "nextDefaultScene"
+    },
+    testPausingAudio: {
+        order: [
+            new Audio("TEST AUDIO PAUSE INGAME 1/1")
+        ],
+        nextScene: "nextDefaultScene"
     }
 }
 
@@ -124,6 +130,7 @@ export const storage = {
     testEventChange1: new Scene(testSceneData.testEventChange1),
     testEventChange2: new Scene(testSceneData.testEventChange2),
     testBoundary: new Scene(testSceneData.testBoundary),
+    testPausingAudio: new Scene(testSceneData.testPausingAudio),
 
     default: new Scene(sceneData.default),
     nextDefaultScene: "nextDefaultScene"

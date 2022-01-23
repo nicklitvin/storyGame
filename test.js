@@ -104,7 +104,7 @@ class TestGame{
         const boundaryTest = new BoundaryTest(boundaryLocation,directions,1,myMouse)
         const success = await boundaryTest.runUntilFail()
         assert(success == true, "should be within boundary")
-        console.log("TESTING BOUNDARY1 1/1")
+        console.log("TEST BOUNDARY1 1/1")
     }
 
     async testMovingBoundary1(){
@@ -117,7 +117,7 @@ class TestGame{
         const boundaryTest = new BoundaryTest(boundaryLocation,directions,1,myMouse)
         const success = await boundaryTest.runUntilFail()
         assert(success == false, "should not be within boundary")
-        console.log("TESTING BOUNDARY2 1/1")
+        console.log("TEST BOUNDARY2 1/1")
     }
 
     async testBoundaryInGame(){
@@ -126,6 +126,27 @@ class TestGame{
 
         await myGame.run()
         assert(events.testBoundary == 1, "mouse should be always within boundary")
+    }
+
+    async testPausingAudio(){
+        const audio = new Audio("TEST AUDIO PAUSE 1/1")
+        audio.play()
+
+        await new Promise( (res)=>{
+            setTimeout( ()=>{
+                audio.pause()
+                assert(audio.timeLeft < 250, "timeLeft should change")
+                res()
+            }, 50)
+        })
+
+        await new Promise( (res)=>{
+            setTimeout( async ()=>{
+                await audio.play()
+                res()
+            }, 50)
+        })
+        assert(audio.complete == true, "audio should be over")
     }
 
     async runTests(){
@@ -139,7 +160,8 @@ class TestGame{
                 this.testEventChange,
                 this.testMovingBoundary,
                 this.testMovingBoundary1,
-                this.testBoundaryInGame
+                this.testBoundaryInGame,
+                this.testPausingAudio,
             ])
         {
             console.log(this.split)
