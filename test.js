@@ -149,6 +149,26 @@ class TestGame{
         assert(audio.complete == true, "audio should be over")
     }
 
+    async testPausingAudioInGame(){
+        const myGame = new Game(storage.testPausingAudio)
+        myGame.run()
+
+        await new Promise( (res)=>{
+            setTimeout( ()=>{
+                myGame.pause()
+                res()
+            }, 50)
+        })
+
+        await new Promise( (res)=>{
+            setTimeout( async ()=>{
+                await myGame.resume()
+                res()
+            }, 50)
+        })
+        assert(myGame.currentScene == storage.nextDefaultScene, "should be next scene")
+    }
+
     async runTests(){
         for(var test of 
             [   
@@ -162,6 +182,7 @@ class TestGame{
                 this.testMovingBoundary1,
                 this.testBoundaryInGame,
                 this.testPausingAudio,
+                this.testPausingAudioInGame,
             ])
         {
             console.log(this.split)

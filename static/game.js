@@ -34,4 +34,24 @@ export default class Game{
     moveMouse(x,y){
         this.mouse.move(x,y)
     }
+
+    pause(){
+        try{
+            this.currentScene.pause()
+        }
+        catch{
+            console.log("Current scene cant be paused")
+        }
+    }
+    
+    async resume(){
+        try{
+            var nextScene = await this.currentScene.resume()
+            this.currentScene = storage[nextScene]
+            // call run to repeat
+        }
+        catch{
+            console.log("Current scene cant be resumed")
+        }
+    }
 }

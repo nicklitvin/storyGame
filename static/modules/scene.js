@@ -14,11 +14,25 @@ export default class Scene {
         }  
     }
 
-    async run(mouse=null){
-        for(let frame of this.order){
-            this.currentFrame = frame
-            await frame.play(mouse)
-        } 
+    async run(mouse=null,lastFrame=null){
+        if(lastFrame){
+            var found = false
+            for(let frame of this.order){
+                if(lastFrame === frame){
+                    found = true
+                    continue
+                }
+                if(found){
+                    await frame.play
+                }
+            }
+        }
+        else{
+            for(let frame of this.order){
+                this.currentFrame = frame
+                await frame.play(mouse)
+            }
+        }
             
         return this.updateNextScene()
     }
@@ -30,5 +44,24 @@ export default class Scene {
             catch{await frame.play()}
         } 
         return this.updateNextScene()
+    }
+
+    pause(){
+        try{
+            this.currentFrame.pause()
+        }
+        catch{
+            console.log("cant pause")
+        }
+    }
+
+    async resume(){
+        try{
+            await this.currentFrame.play()
+            return this.run(null,this.currentFrame)
+        }
+        catch{
+            console.log("cant resume")
+        }
     }
 }
