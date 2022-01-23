@@ -5,6 +5,7 @@ import Location from "./static/modules/location.js"
 import { strict as assert } from "assert"
 import Game from "./static/game.js"
 import { storage, events } from "./static/modules/storage.js"
+import { BoundaryTest, KeyPoint} from "./static/modules/boundaryTest.js"
 
 class TestGame{
     constructor(){
@@ -92,6 +93,33 @@ class TestGame{
         assert(myGame1.currentScene === storage.testEventChange2)
     }
 
+    async testMovingBoundary(){
+        const directions = 
+            [
+                new KeyPoint(new Location(1,0),0.01),
+                new KeyPoint(new Location(0.5,0.5),0.05)
+            ]
+        const myMouse = new Mouse(new Location(0.1,0.1))
+        const boundaryLocation = new Location(0,0)
+        const boundaryTest = new BoundaryTest(boundaryLocation,directions,1,myMouse)
+        const success = await boundaryTest.runUntilFail()
+        assert(success == true, "should be within boundary")
+        console.log("TESTING BOUNDARY1 1/1")
+    }
+
+    async testMovingBoundary1(){
+        const directions = 
+            [
+                new KeyPoint(new Location(10,0),0.01),
+            ]
+        const myMouse = new Mouse(new Location(0.1,0.1))
+        const boundaryLocation = new Location(0,0)
+        const boundaryTest = new BoundaryTest(boundaryLocation,directions,1,myMouse)
+        const success = await boundaryTest.runUntilFail()
+        assert(success == false, "should not be within boundary")
+        console.log("TESTING BOUNDARY2 1/1")
+    }
+
     async runTests(){
         for(var test of 
             [   
@@ -100,7 +128,9 @@ class TestGame{
                 this.testInteractableClick,
                 this.testSceneAndFrameTransition,
                 this.testMouseMove,
-                this.testEventChange
+                this.testEventChange,
+                this.testMovingBoundary,
+                this.testMovingBoundary1,
             ])
         {
             console.log(this.split)

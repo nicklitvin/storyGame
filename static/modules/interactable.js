@@ -17,7 +17,8 @@ export default class Interactable{
     }
 
     async isClickedOn(mouse){
-        const distance = (mouse.location.x - this.location.x)**2 + (mouse.location.y - this.location.y)**2
+        const distance = ((mouse.location.x - this.location.x)**2 +
+            (mouse.location.y - this.location.y)**2)**0.5
         // console.log(distance,mouse.location,this.location)
         if(distance - this.radius <= 0){
             await this.clickedOn()

@@ -1,5 +1,5 @@
 import Mouse from "./modules/mouse.js"
-import { storage } from "./modules/storage.js"
+import {storage} from "./modules/storage.js"
 
 export default class Game{
     constructor(scene=storage.default){
