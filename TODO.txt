@@ -1,12 +1,9 @@
 TODO
-simplify game functions, some unecessary
-
-audio playing
 menu screens
+audio playing
 click test
 
 FOR LATER
-consider making Frame class with Audio,Test,and Interaction as children for pause
 Make events belong to Game object
 create txt file that takes user input and creates scenes
 dont keep track of mouse when not necessary during scene

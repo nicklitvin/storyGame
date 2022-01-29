@@ -35,7 +35,7 @@ export default class Scene {
         return this.updateNextScene()
     }
 
-    async testRunClickAll(){
+    async runAndClickAll(){
         for(let frame of this.order){
             this.currentFrame = frame
             try{await frame.playAndClickAll()}

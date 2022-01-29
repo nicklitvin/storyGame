@@ -13,19 +13,15 @@ export default class Game{
         this.currentScene = storage[nextScene]
     }
 
-    async testRunClickAll(){
-        var nextScene = await this.currentScene.testRunClickAll()
+    async runAndClickAll(){
+        var nextScene = await this.currentScene.runAndClickAll()
         this.currentScene = storage[nextScene]
     }
 
-    testRunWithoutWaiting(){
-        this.currentScene.run()
-    }
-
-    async processMouseChange(){
+    async clickMouse(){
         try{
             if(!this.paused){
-                const clickedOn = await this.currentScene.currentFrame.processMouseChange(this.mouse)
+                const clickedOn = await this.currentScene.currentFrame.clickMouse(this.mouse)
                 return clickedOn
             }
         }

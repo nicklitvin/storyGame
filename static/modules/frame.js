@@ -1,7 +1,7 @@
 export default class Frame{
-    constructor(duration){
+    constructor(secDuration){
         this.startTime = null
-        this.timeLeft = duration
+        this.timeLeft = secDuration
         this.timerPromise = null
         this.timerTimeout = null
         this.complete = false

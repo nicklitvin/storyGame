@@ -1,11 +1,11 @@
 import Frame from "./frame.js"
 
 export default class Interaction extends Frame{
-    constructor(interactables=[],duration=0,isOver=false){
-        super(duration*1000)
+    constructor(interactables=[],secDuration=0,isOver=false){
+        super(secDuration*1000)
 
         this.interactables = interactables
-        this.duration = duration*1000
+        this.duration = secDuration*1000
         this.isOver = isOver
     }
 
@@ -25,7 +25,7 @@ export default class Interaction extends Frame{
         await this.timerPromise()
     }
 
-    async processMouseChange(mouse){
+    async clickMouse(mouse){
         var clickedOn = 0
         for(let i of this.interactables){
             if(await i.isClickedOn(mouse)){

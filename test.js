@@ -26,15 +26,15 @@ class TestGame{
 
     async testGameSceneReturn(){
         const myGame = new Game(storage.testDefaultScene)
-        await myGame.testRunClickAll()
+        await myGame.runAndClickAll()
         assert(myGame.currentScene == storage.nextDefaultScene, "next Scene Error")
     }
 
     async testInteractableClick(){
         const myGame = new Game(storage.testClick)
         myGame.mouse = new Mouse(new Location(4,4.2))
-        myGame.testRunWithoutWaiting()
-        const clicked = await myGame.processMouseChange()
+        myGame.run()
+        const clicked = await myGame.clickMouse()
         assert(clicked == 1, "clicked Error")
         
         return new Promise( (res)=>{
@@ -47,14 +47,14 @@ class TestGame{
         myGame.mouse = new Mouse(new Location(4,4.2))
         await myGame.run()
 
-        myGame.testRunWithoutWaiting()
-        const beforeClick = await myGame.processMouseChange()
+        myGame.run()
+        const beforeClick = await myGame.clickMouse()
         assert(beforeClick == 0, "dont process click during audio")
         assert(myGame.currentScene.currentFrame == storage.testTransition1.currentFrame, "should be audio")
         await new Promise( (res)=>setTimeout(res,350))
 
         assert(myGame.currentScene.currentFrame == storage.testTransition1.currentFrame, "should be interact")
-        const afterClick = await myGame.processMouseChange()
+        const afterClick = await myGame.clickMouse()
         assert(afterClick == 1, "click not registering")
 
 
@@ -66,13 +66,13 @@ class TestGame{
     async testMouseMove(){
         const myGame = new Game(storage.testClick)
         myGame.mouse = new Mouse(new Location(0,0))
-        myGame.testRunWithoutWaiting()
+        myGame.run()
         
-        const beforeMove = await myGame.processMouseChange()
+        const beforeMove = await myGame.clickMouse()
         assert(beforeMove == 0, "should miss target")
         
         myGame.moveMouse(4,4.1)
-        const afterMove = await myGame.processMouseChange()
+        const afterMove = await myGame.clickMouse()
         assert(afterMove == 1, "should hit target")
         
         return new Promise( (res)=>{
@@ -82,7 +82,7 @@ class TestGame{
 
     async testEventChange(){
         const myGame = new Game(storage.testEventChange)
-        await myGame.testRunClickAll()
+        await myGame.runAndClickAll()
         assert(events.testEvent == 1, "event should change")
         assert(myGame.currentScene === storage.testEventChange1)
 
@@ -186,7 +186,7 @@ class TestGame{
 
         await new Promise( async (res)=>{
             myGame.mouse.location = new Location(0.1,0)
-            await myGame.processMouseChange()
+            await myGame.clickMouse()
             res()
         })
         assert(events.testPause == 0, "should not be pressed during pause")
@@ -203,7 +203,7 @@ class TestGame{
 
         await new Promise( async (res)=>{
             myGame.mouse.location = new Location(0.1,0)
-            await myGame.processMouseChange()
+            await myGame.clickMouse()
             res()
         })
 
