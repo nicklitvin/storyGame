@@ -5,6 +5,7 @@ export default class Game{
     constructor(scene=storage.default){
         this.currentScene = scene
         this.mouse = new Mouse()
+        this.paused = false
     }
 
     async run(){
@@ -23,13 +24,15 @@ export default class Game{
 
     async processMouseChange(){
         try{
-            const clickedOn = await this.currentScene.currentFrame.processMouseChange(this.mouse)
-            return clickedOn
+            if(!this.paused){
+                const clickedOn = await this.currentScene.currentFrame.processMouseChange(this.mouse)
+                return clickedOn
+            }
         }
         catch{
             return 0
         }
-    }
+    } 
 
     moveMouse(x,y){
         this.mouse.move(x,y)
@@ -38,6 +41,7 @@ export default class Game{
     pause(){
         try{
             this.currentScene.pause()
+            this.paused = true
         }
         catch{
             console.log("Current scene cant be paused")
@@ -46,6 +50,7 @@ export default class Game{
     
     async resume(){
         try{
+            this.paused = false
             var nextScene = await this.currentScene.resume()
             this.currentScene = storage[nextScene]
             // call run to repeat

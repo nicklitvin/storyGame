@@ -1,7 +1,11 @@
-export default class Interaction{
+import Frame from "./frame.js"
+
+export default class Interaction extends Frame{
     constructor(interactables=[],duration=0,isOver=false){
+        super(duration*1000)
+
         this.interactables = interactables
-        this.duration = duration
+        this.duration = duration*1000
         this.isOver = isOver
     }
 
@@ -17,10 +21,8 @@ export default class Interaction{
     }
 
     async play(){
-        var time = this.duration
-        return new Promise( (res)=>{
-            setTimeout(res,time)
-        })
+        this.makeTimerPromise()
+        await this.timerPromise()
     }
 
     async processMouseChange(mouse){

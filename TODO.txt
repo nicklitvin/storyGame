@@ -1,7 +1,9 @@
 TODO
+simplify game functions, some unecessary
+
 audio playing
-pausing
 menu screens
+click test
 
 FOR LATER
 consider making Frame class with Audio,Test,and Interaction as children for pause

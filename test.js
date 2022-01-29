@@ -169,6 +169,48 @@ class TestGame{
         assert(myGame.currentScene == storage.nextDefaultScene, "should be next scene")
     }
 
+    async testInteractionPausing(){
+        const myGame = new Game(storage.testPausingInteraction)
+        myGame.mouse = new Mouse(10,0.1)
+        myGame.run()
+
+        await new Promise( (res)=>{
+            setTimeout( ()=>{
+                myGame.pause()
+                res()
+            }, 150)
+        })
+        assert(events.testPause == 0, "should not be pressed")
+        assert(myGame.paused == true, "should be paused")
+        const timeLeft = myGame.currentScene.currentFrame.timeLeft
+
+        await new Promise( async (res)=>{
+            myGame.mouse.location = new Location(0.1,0)
+            await myGame.processMouseChange()
+            res()
+        })
+        assert(events.testPause == 0, "should not be pressed during pause")
+        assert(myGame.paused == true, "should be paused")
+        assert(myGame.currentScene.currentFrame.timeLeft == timeLeft, "should be same timeLeft")
+
+        await new Promise( (res)=>{
+            myGame.resume()
+            res()
+        })
+
+        assert(myGame.paused == false, "should be unpaused")
+        assert(myGame.currentScene != storage.nextDefaultScene, "should be same scene")
+
+        await new Promise( async (res)=>{
+            myGame.mouse.location = new Location(0.1,0)
+            await myGame.processMouseChange()
+            res()
+        })
+
+        assert(events.testPause == 1, "should be pressed")
+        assert(myGame.currentScene == storage.nextDefaultScene, "should be next scene")
+    }
+
     async runTests(){
         for(var test of 
             [   
@@ -183,6 +225,7 @@ class TestGame{
                 this.testBoundaryInGame,
                 this.testPausingAudio,
                 this.testPausingAudioInGame,
+                this.testInteractionPausing
             ])
         {
             console.log(this.split)
