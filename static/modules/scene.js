@@ -20,18 +20,21 @@ export default class Scene {
             for(let frame of this.order){
                 if(found){
                     this.currentFrame = frame
-                    await frame.play()
+                    await frame.play(mouse)
+
                 }
                 else if(frame == lastFrame){
                     found = true
                 }
             }
         }
-        for(let frame of this.order){
-            this.currentFrame = frame
-            await frame.play(mouse)
+        else{
+            for(let frame of this.order){
+                this.currentFrame = frame
+                await frame.play(mouse)
+            }
         }
-            
+
         return this.updateNextScene()
     }
 

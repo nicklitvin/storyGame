@@ -4,8 +4,8 @@ import Audio from "./static/modules/audio.js"
 import Location from "./static/modules/location.js"
 import { strict as assert } from "assert"
 import Game from "./static/game.js"
-import { storage, events } from "./static/modules/storage.js"
 import { BoundaryTest, KeyPoint} from "./static/modules/boundaryTest.js"
+import Interaction from "./static/modules/interaction.js"
 
 class TestGame{
     constructor(){
@@ -14,28 +14,34 @@ class TestGame{
 
     async testClick(){
         const myMouse1 = new Mouse(new Location(0,0.5))
-        const myMouse2 = new Mouse(new Location(4,new Location(1.2)))
+        const myMouse2 = new Mouse(new Location(4,1.2))
         const myInter = new Interactable(new Audio("TEST CLICK 1/1"),new Location(0,0),1)
         
-        const click1 = await myInter.isClickedOn(myMouse1)
-        const click2 = await myInter.isClickedOn(myMouse2)
-
+        const click1 = myInter.isClickedOn(myMouse1)
+        if(click1){await myInter.clickMe()}
+        const click2 = myInter.isClickedOn(myMouse2)
+        
         assert(click1 == true, "should be clicked")
         assert(click2 == false, "should not be clicked")
     }
 
     async testGameSceneReturn(){
-        const myGame = new Game(storage.testDefaultScene)
+        const testScene = "testDefault"
+        const expectedScene = "testDefaultDestination"
+        const myGame = new Game(testScene)
         await myGame.runAndClickAll()
-        assert(myGame.currentScene == storage.nextDefaultScene, "next Scene Error")
+
+        assert(myGame.currentScene.order == myGame.gameScenes.getScene(expectedScene).order, "should be next scene (same order)")
     }
 
     async testInteractableClick(){
-        const myGame = new Game(storage.testClick)
+        const testScene = "testClick"
+        const myGame = new Game(testScene)
         myGame.mouse = new Mouse(new Location(4,4.2))
         myGame.run()
+
         const clicked = await myGame.clickMouse()
-        assert(clicked == 1, "clicked Error")
+        assert(clicked == 1, "should be clicked")
         
         return new Promise( (res)=>{
             setTimeout(res,500)
@@ -43,20 +49,20 @@ class TestGame{
     }
 
     async testSceneAndFrameTransition(){
-        const myGame = new Game(storage.testTransition)
+        const testScene = "testTransition"
+        const myGame = new Game(testScene)
         myGame.mouse = new Mouse(new Location(4,4.2))
         await myGame.run()
 
         myGame.run()
         const beforeClick = await myGame.clickMouse()
-        assert(beforeClick == 0, "dont process click during audio")
-        assert(myGame.currentScene.currentFrame == storage.testTransition1.currentFrame, "should be audio")
+        assert(beforeClick == 0, "should not be pressed during audio")
+        assert(myGame.currentScene.currentFrame instanceof Audio,"should be Audio Frame")
         await new Promise( (res)=>setTimeout(res,350))
 
-        assert(myGame.currentScene.currentFrame == storage.testTransition1.currentFrame, "should be interact")
+        assert(myGame.currentScene.currentFrame instanceof Interaction, "should be Interaction Frame")
         const afterClick = await myGame.clickMouse()
-        assert(afterClick == 1, "click not registering")
-
+        assert(afterClick == 1, "should be clicked during Interaction")
 
         return new Promise( (res)=>{
             setTimeout(res,500)
@@ -64,7 +70,8 @@ class TestGame{
     }
 
     async testMouseMove(){
-        const myGame = new Game(storage.testClick)
+        const testScene = "testClick"
+        const myGame = new Game(testScene)
         myGame.mouse = new Mouse(new Location(0,0))
         myGame.run()
         
@@ -81,16 +88,23 @@ class TestGame{
     }
 
     async testEventChange(){
-        const myGame = new Game(storage.testEventChange)
-        await myGame.runAndClickAll()
-        assert(events.testEvent == 1, "event should change")
-        assert(myGame.currentScene === storage.testEventChange1)
+        const testScene = "testEventChange"
+        const expectedScene = "testDefaultDestination"
+        const myGame = new Game(testScene)
+        const expectedSceneOrder = myGame.gameScenes.getScene(expectedScene).order
 
-        events.testEvent = 0
-        const myGame1 = new Game(storage.testEventChangeExtra)
+        await myGame.runAndClickAll()
+        assert(myGame.globalState.testEvent == 1, "event should change")
+        assert(myGame.currentScene.order == expectedSceneOrder,"should have transitioned to next scene")
+
+        myGame.globalState.testEvent = 0
+
+        const testScene0 = "testEventChange1"
+        const myGame1 = new Game(testScene0)
+
         await myGame1.run()
-        assert(events.testEvent == 0, "event shouldnt change")
-        assert(myGame1.currentScene === storage.testEventChange2)
+        assert(myGame.globalState.testEvent == 0, "event shouldnt change")
+        assert(myGame.currentScene.order == expectedSceneOrder, "should have transitioned to next scene")
     }
 
     async testMovingBoundary(){
@@ -121,11 +135,12 @@ class TestGame{
     }
 
     async testBoundaryInGame(){
-        const myGame = new Game(storage.testBoundary)
+        const testScene = "testBoundary"
+        const myGame = new Game(testScene)
         myGame.mouse = new Mouse(new Location(0.5,0.5))
 
         await myGame.run()
-        assert(events.testBoundary == 1, "mouse should be always within boundary")
+        assert(myGame.globalState.testBoundary == 1, "mouse should always be within boundary")
     }
 
     async testPausingAudio(){
@@ -139,6 +154,7 @@ class TestGame{
                 res()
             }, 50)
         })
+        assert(audio.complete == false, "audio should NOT be over")
 
         await new Promise( (res)=>{
             setTimeout( async ()=>{
@@ -150,7 +166,9 @@ class TestGame{
     }
 
     async testPausingAudioInGame(){
-        const myGame = new Game(storage.testPausingAudio)
+        const testScene = "testPausingAudio"
+        const expectedScene = "testDefaultDestination"
+        const myGame = new Game(testScene)
         myGame.run()
 
         await new Promise( (res)=>{
@@ -160,17 +178,19 @@ class TestGame{
             }, 50)
         })
 
-        await new Promise( (res)=>{
-            setTimeout( async ()=>{
-                await myGame.resume()
-                res()
-            }, 50)
+        assert(myGame.globalState.paused == true, "game should be paused")
+
+        await new Promise( async (res)=>{
+            await myGame.resume()
+            res()
         })
-        assert(myGame.currentScene == storage.nextDefaultScene, "should be next scene")
+        assert(myGame.globalState.paused == false, "game should be unpaused")
+        assert(myGame.currentScene.order == myGame.gameScenes.getScene(expectedScene).order, "should be next scene")
     }
 
     async testInteractionPausing(){
-        const myGame = new Game(storage.testPausingInteraction)
+        const testScene = "testPausingInteraction"
+        const myGame = new Game(testScene)
         myGame.mouse = new Mouse(10,0.1)
         myGame.run()
 
@@ -180,8 +200,9 @@ class TestGame{
                 res()
             }, 150)
         })
-        assert(events.testPause == 0, "should not be pressed")
-        assert(myGame.paused == true, "should be paused")
+        assert(myGame.globalState.testPause == 0, "should not be pressed")
+        assert(myGame.globalState.paused == true, "should be paused")
+        
         const timeLeft = myGame.currentScene.currentFrame.timeLeft
 
         await new Promise( async (res)=>{
@@ -189,8 +210,8 @@ class TestGame{
             await myGame.clickMouse()
             res()
         })
-        assert(events.testPause == 0, "should not be pressed during pause")
-        assert(myGame.paused == true, "should be paused")
+        assert(myGame.globalState.testPause == 0, "should not be pressed during pause")
+        assert(myGame.globalState.paused == true, "should be paused")
         assert(myGame.currentScene.currentFrame.timeLeft == timeLeft, "should be same timeLeft")
 
         await new Promise( (res)=>{
@@ -198,8 +219,10 @@ class TestGame{
             res()
         })
 
-        assert(myGame.paused == false, "should be unpaused")
-        assert(myGame.currentScene != storage.nextDefaultScene, "should be same scene")
+        const expectedSceneOrder = myGame.gameScenes.getScene("testDefaultDestination").order
+
+        assert(myGame.globalState.paused == false, "should be unpaused")
+        assert(myGame.currentScene.order != expectedSceneOrder, "should not be next scene")
 
         await new Promise( async (res)=>{
             myGame.mouse.location = new Location(0.1,0)
@@ -207,8 +230,8 @@ class TestGame{
             res()
         })
 
-        assert(events.testPause == 1, "should be pressed")
-        assert(myGame.currentScene == storage.nextDefaultScene, "should be next scene")
+        assert(myGame.globalState.testPause == 1, "should be pressed")
+        assert(myGame.currentScene.order == expectedSceneOrder, "should be next scene")
     }
 
     async runTests(){

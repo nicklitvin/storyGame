@@ -11,13 +11,8 @@ export default class Interaction extends Frame{
 
     async playAndClickAll(){
         for(let i of this.interactables){
-            await i.clickedOn()
+            await i.clickMe()
         }
-
-        var time = this.duration
-        return new Promise( (res)=>{
-            setTimeout(res,time)
-        })
     }
 
     async play(){
@@ -28,7 +23,8 @@ export default class Interaction extends Frame{
     async clickMouse(mouse){
         var clickedOn = 0
         for(let i of this.interactables){
-            if(await i.isClickedOn(mouse)){
+            if(i.isClickedOn(mouse)){
+                await i.clickMe()
                 clickedOn += 1
             }
         }

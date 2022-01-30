@@ -1,5 +1,5 @@
 TODO
-menu screens
+menu items
 audio playing
 click test
 
