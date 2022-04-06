@@ -1,10 +1,11 @@
 TODO
-menu items
 audio playing
-click test
 
 FOR LATER
-Make events belong to Game object
+process change in global state when in menu
+consider separating global state variables from game variables
+save global state in storage
+click test
 create txt file that takes user input and creates scenes
 dont keep track of mouse when not necessary during scene
 preload everything, loading screen

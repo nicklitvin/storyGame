@@ -31,7 +31,8 @@ class TestGame{
         const myGame = new Game(testScene)
         await myGame.runAndClickAll()
 
-        assert(myGame.currentScene.order == myGame.gameScenes.getScene(expectedScene).order, "should be next scene (same order)")
+        assert(myGame.currentScene.order == myGame.gameScenes.getScene(expectedScene).order,
+            "should be next scene (same order)")
     }
 
     async testInteractableClick(){
@@ -60,7 +61,8 @@ class TestGame{
         assert(myGame.currentScene.currentFrame instanceof Audio,"should be Audio Frame")
         await new Promise( (res)=>setTimeout(res,350))
 
-        assert(myGame.currentScene.currentFrame instanceof Interaction, "should be Interaction Frame")
+        assert(myGame.currentScene.currentFrame instanceof Interaction,
+            "should be Interaction Frame")
         const afterClick = await myGame.clickMouse()
         assert(afterClick == 1, "should be clicked during Interaction")
 
@@ -95,7 +97,8 @@ class TestGame{
 
         await myGame.runAndClickAll()
         assert(myGame.globalState.testEvent == 1, "event should change")
-        assert(myGame.currentScene.order == expectedSceneOrder,"should have transitioned to next scene")
+        assert(myGame.currentScene.order == expectedSceneOrder,
+            "should have transitioned to next scene")
 
         myGame.globalState.testEvent = 0
 
@@ -104,7 +107,8 @@ class TestGame{
 
         await myGame1.run()
         assert(myGame.globalState.testEvent == 0, "event shouldnt change")
-        assert(myGame.currentScene.order == expectedSceneOrder, "should have transitioned to next scene")
+        assert(myGame.currentScene.order == expectedSceneOrder,
+            "should have transitioned to next scene")
     }
 
     async testMovingBoundary(){
@@ -185,7 +189,8 @@ class TestGame{
             res()
         })
         assert(myGame.globalState.paused == false, "game should be unpaused")
-        assert(myGame.currentScene.order == myGame.gameScenes.getScene(expectedScene).order, "should be next scene")
+        assert(myGame.currentScene.order == myGame.gameScenes.getScene(expectedScene).order,
+            "should be next scene")
     }
 
     async testInteractionPausing(){
@@ -234,6 +239,29 @@ class TestGame{
         assert(myGame.currentScene.order == expectedSceneOrder, "should be next scene")
     }
 
+    // start playing, pause, click, change global variable
+    async testMenuClick() {
+        const testScene = "testMenuClick"
+        const myGame = new Game(testScene)
+        myGame.mouse = new Mouse(new Location(1,1.1))
+        myGame.run()
+
+        await myGame.clickMouse()
+        assert(myGame.globalState.testEvent == 0, "should not be pressed")
+
+        await new Promise( (res)=>{
+            setTimeout( ()=>{
+                myGame.pause()
+                res()
+            }, 150)
+        })
+
+        assert(myGame.globalState.paused == true, "should be paused")
+        await myGame.clickMouse()
+        assert(myGame.globalState.testEvent == 1, "should be pressed")
+        await myGame.resume()
+    }
+
     async runTests(){
         for(var test of 
             [   
@@ -248,7 +276,8 @@ class TestGame{
                 this.testBoundaryInGame,
                 this.testPausingAudio,
                 this.testPausingAudioInGame,
-                this.testInteractionPausing
+                this.testInteractionPausing,
+                this.testMenuClick
             ])
         {
             console.log(this.split)

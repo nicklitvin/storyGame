@@ -1,15 +1,17 @@
 import Mouse from "./modules/mouse.js"
+import Menu from "./modules/menu.js"
 import GameSceneStorage from "./modules/gameSceneStorage.js"
 import {globalState} from "./modules/globalState.js"
 
 export default class Game{
     constructor(startScene=null){
         this.mouse = new Mouse()
-        this.paused = false
+        this.menu = new Menu(globalState)
 
         this.globalState = globalState
         this.gameScenes = new GameSceneStorage(globalState)
-        this.currentScene = startScene ? this.gameScenes.getScene(startScene): this.gameScenes.getDefaultScene()
+        this.currentScene = startScene ? this.gameScenes.getScene(startScene):
+            this.gameScenes.getDefaultScene()
     }
 
     async run(){
@@ -27,6 +29,8 @@ export default class Game{
             if(!this.globalState.paused){
                 const clickedOn = await this.currentScene.currentFrame.clickMouse(this.mouse)
                 return clickedOn
+            } else {
+                this.menu.clickMouse(this.mouse)
             }
         }
         catch{
@@ -51,6 +55,7 @@ export default class Game{
     async resume(){
         try{
             this.globalState.paused = false
+
             var nextScene = await this.currentScene.resume()
             this.currentScene = this.gameScenes.getScene(nextScene)
             // call run to repeat

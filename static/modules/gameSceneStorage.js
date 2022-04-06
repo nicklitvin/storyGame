@@ -125,6 +125,13 @@ export default class GameSceneStorage{
                     new Audio("GAMING 1/1")
                 ],
                 nextScene: "scene2"
+            },
+            testMenuClick: {
+                order : [
+                    new Audio("MENU CLICK 1/2"),
+                    new Audio("MENU CLICK 2/2")
+                ],
+                nextScene: "default"
             }
         }
     }

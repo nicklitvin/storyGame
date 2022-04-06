@@ -14,25 +14,24 @@ export default class MenuItem{
     }
 
     isClickedOn(mouse){
-        if(
-            mouse.location.x >= this.location-this.width/2 &&
-            mouse.location.x <= this.location+this.width/2 &&
-            mouse.location.y >= this.location-this.height/2 &&
-            mouse.location.y <= this.location+this.height/2
-        )
-        {
+        const con0 = mouse.location.x >= this.location.x - this.width/2
+        const con1 = mouse.location.x <= this.location.x + this.width/2
+        const con2 = mouse.location.y >= this.location.y - this.height/2
+        const con3 = mouse.location.y <= this.location.y + this.height/2
+
+        if(con0 && con1 && con2 && con3){
             return true
         }
     }
 
     clickMe(){
         if(this.isClickable){
-            const state = this.globalEvents[affectedEvent]
+            const state = this.globalEvents[this.affectedEvent]
             if(state){
-                this.globalEvents[affectedEvent] = false
+                this.globalEvents[this.affectedEvent] = false
             }
             else{
-                this.globalEvents[affectedEvent] = true
+                this.globalEvents[this.affectedEvent] = true
             }
         }
     }
